@@ -22,8 +22,10 @@ class HttpController: NSObject {
         let session = URLSession.shared
         let task = session.dataTask(with: req as URLRequest) { (data, response, error) in
             do {
-                let jsonResult: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
-                self.delegate?.didReceiveResults(results: jsonResult)
+                if error == nil && data != nil {
+                    let jsonResult: NSDictionary = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as! NSDictionary
+                    self.delegate?.didReceiveResults(results: jsonResult)
+                }
             }
             catch {
                 

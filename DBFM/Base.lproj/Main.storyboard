@@ -29,7 +29,7 @@
                                 </constraints>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tIt-OG-plW">
-                                <rect key="frame" x="0.0" y="192" width="375" height="475"/>
+                                <rect key="frame" x="0.0" y="253" width="375" height="414"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="douban" id="G70-Yh-0cV">
@@ -95,7 +95,7 @@
                             <constraint firstAttribute="trailing" secondItem="tIt-OG-plW" secondAttribute="trailing" id="3Ab-ZS-9du"/>
                             <constraint firstItem="4YZ-aq-njj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3Rt-U6-y7j"/>
                             <constraint firstAttribute="trailing" secondItem="4YZ-aq-njj" secondAttribute="trailing" id="6Kx-iO-FMy"/>
-                            <constraint firstItem="tIt-OG-plW" firstAttribute="top" secondItem="4YZ-aq-njj" secondAttribute="bottom" id="Dct-LO-Dll"/>
+                            <constraint firstItem="tIt-OG-plW" firstAttribute="top" secondItem="4YZ-aq-njj" secondAttribute="bottom" constant="61" id="Dct-LO-Dll"/>
                             <constraint firstItem="4YZ-aq-njj" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="NLX-Mn-18c"/>
                             <constraint firstItem="4YZ-aq-njj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="RTT-9O-3dT"/>
                             <constraint firstItem="tIt-OG-plW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ScO-aj-ZYa"/>
