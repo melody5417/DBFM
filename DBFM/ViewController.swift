@@ -8,8 +8,9 @@
 
 import UIKit
 import MediaPlayer
+import QuartzCore
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HttpProtocol {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, HttpProtocol, ChannelProtocol {
 
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var imageView: UIImageView!
@@ -24,6 +25,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var audioPlayer = MPMoviePlayerController()
     
+    var timer = Timer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -37,7 +40,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let channel:ChannelController = segue.destination as! ChannelController
+        channel.delegate = self
+        channel.channelData = self.channelData
+    }
+    
+    // MARK: UITableViewDelegate
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.layer.transform = CATransform3DMakeScale(0.1, 0.1, 1)
+        UIView.animate(withDuration: 0.25) { 
+            cell.layer.transform = CATransform3DMakeScale(1, 1, 1)
+        }
+    }
+    
     // MARK: UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -118,9 +136,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    // MARK: ChannelProtocol
+    
+    func onChangeChannel(channelID: String) {
+        let url:String = "http://douban.fm/j/mine/playlist?type=n&channel=\(channelID)&from=mainsite"
+        webController.onSearch(urlStr: url)
+    }
+    
     // MARK: 音乐操作
     
     func onSetAudio(url: String) {
+        timer.invalidate()
         self.audioPlayer.stop()
         self.audioPlayer.contentURL = NSURL(string: url)! as URL!
         self.audioPlayer.play()
