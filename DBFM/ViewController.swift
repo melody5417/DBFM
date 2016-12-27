@@ -25,15 +25,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var audioPlayer = MPMoviePlayerController()
     
-    var timer = Timer()
+    var timer: Timer = Timer()
+    
+    var tapGesture: UITapGestureRecognizer? = nil
+    
+    @IBOutlet weak var btnPlay: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        progressView.setProgress(0, animated: true)
+        
         webController.delegate = self
         webController.onSearch(urlStr: "http://www.douban.com/j/app/radio/channels")
         webController.onSearch(urlStr: "http://douban.fm/j/mine/playlist?type=n&channel=0&from=mainsite")
+        
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+        tapGesture?.numberOfTapsRequired = 1
+        
+        self.imageView.isUserInteractionEnabled = true
+        self.imageView.addGestureRecognizer(tapGesture!)
+        
+        self.btnPlay.isHidden = true
+        self.btnPlay.isUserInteractionEnabled = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,6 +61,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         channel.delegate = self
         channel.channelData = self.channelData
     }
+    
+    // MARK: Tap
+    
+    func handleTapGesture(_ sender: UITapGestureRecognizer) {
+        print("tap")
+        if (sender.view == self.imageView) {
+            btnPlay.isHidden = false
+            audioPlayer.pause()
+            self.imageView.removeGestureRecognizer(tapGesture!)
+            self.btnPlay.addGestureRecognizer(tapGesture!)
+        } else if sender.view == btnPlay {
+            btnPlay.isHidden = true
+            audioPlayer.play()
+            self.imageView.addGestureRecognizer(tapGesture!)
+            self.btnPlay.removeGestureRecognizer(tapGesture!)
+        }
+    }
+    
+    
     
     // MARK: UITableViewDelegate
     
@@ -147,9 +181,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func onSetAudio(url: String) {
         timer.invalidate()
+        self.playTimeLabel.text = "00:00"
         self.audioPlayer.stop()
         self.audioPlayer.contentURL = NSURL(string: url)! as URL!
         self.audioPlayer.play()
+        timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(onUpdate), userInfo: nil, repeats: true)
+        
+        btnPlay.removeGestureRecognizer(tapGesture!)
+        imageView.addGestureRecognizer(tapGesture!)
+
+        btnPlay.isHidden = true
+    }
+    
+    func onUpdate() {
+        let currentTime = self.audioPlayer.currentPlaybackTime
+        let duration = self.audioPlayer.duration
+        
+        if currentTime > 0 {
+            let progress =  Float(currentTime / duration)
+            self.progressView.setProgress(progress, animated: true)
+        }
+        
+        // TODO 刷新播放时间
     }
     
     func onSetImage(urlString: String) {
